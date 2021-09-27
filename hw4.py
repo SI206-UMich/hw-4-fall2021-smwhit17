@@ -1,3 +1,8 @@
+#Sarah Whitman code
+#UMID: 6209 7116
+#smwhit@umich.edu
+#Worked with on this homework: 
+
 
 import unittest
 
