@@ -84,11 +84,12 @@ class Stall:
         self.cost = cost  
         self.earnings = earnings  
 
-    def process_order(self, name, quantity):
-        if stall.has_item(name, quantity):
-            self.inventory = self.inventory[name] - quantity 
+    def process_order(self, food_name, quantity):
+        self.food_name = food_name
+        if Stall.has_item(food_name, quantity):
+            self.inventory = self.inventory[food_name] - quantity 
         else: 
-            return "Our stall has run out of " + name + " :( Please try a different stall!"
+            return "Our stall has run out of " + food_name + " :( Please try a different stall!"
 
     def has_item(self, food_name, quantity):
         if food_name in self.inventory:
@@ -106,6 +107,11 @@ class Stall:
             self.inventory[food_name] = quantity
 
     def compute_cost(self, quantity):
+        order_total = quantity * self.cost
+        return order_total
+
+    def __str__(self):
+        return "Hello, we are " + self.name + ". This is the current menu " + list(self.inventory.keys()) + ". We charge $" + str(self.cost) + " per item. We have $" + str(self.earnings) + " in total."
          
     
 
@@ -214,18 +220,34 @@ class TestAllMethods(unittest.TestCase):
 ### Write main function
 def main():
     #Create different objects 
+    inventory1 = {"apple": 30, "banana": 20, "pears": 7}
+    inventory2 = {"cupcakes": 35, "pies": 13, "cakes": 45}
+
+    bob = Customer("Bob", 200)
+    sally = Customer("Sally", 150)
+    frank = Customer("Frank", 30)
+    george = Customer("George")
+
+    sweet_shoppe = Stall("The Sweet Shoppe", inventory2, 8)
+    fruit_stand = Stall("Ann's Fruit Stand", inventory1, 3)
+
+    cashier1 = Cashier("CashierDave", [sweet_shoppe])
+    cashier2 = Cashier("CashierAnnie", [sweet_shoppe, fruit_stand])
 
     #Try all cases in the validate_order function
+    attempt4 = Customer.validate_order(cashier1, sweet_shoppe, "cakes", 2)
+
+
     #Below you need to have *each customer instance* try the four cases
     #case 1: the cashier does not have the stall 
-    
-    #case 2: the casher has the stall, but not enough ordered food or the ordered food item
-    
+    attempt1 = bob.validate_order(cashier1, fruit_stand, "banana", 7 )
+    #case 2: the cashier has the stall, but not enough ordered food or the ordered food item
+    attempt2 = george.validate_order(cashier2, fruit_stand, "pears", 8)
     #case 3: the customer does not have enough money to pay for the order: 
-    
+    attempt3 = frank.validate_order(cashier2, sweet_shoppe, "pies", 3)
     #case 4: the customer successfully places an order
-
-    pass
+    attempt4 = sally.validate_order(cashier1, sweet_shoppe, "cakes", 2)
+    
 
 if __name__ == "__main__":
 	main()
