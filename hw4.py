@@ -1,7 +1,7 @@
 #Sarah Whitman code
 #UMID: 6209 7116
 #smwhit@umich.edu
-#Worked with on this homework: 
+#Worked with on this homework: office hours, Abby Williams, Lauren Fulcher
 
 
 import unittest
@@ -205,13 +205,22 @@ class TestAllMethods(unittest.TestCase):
         self.assertEqual(self.s3.has_item("Taco", 3), True)
 
 	# Test validate order
+    
     def test_validate_order(self):
 		# case 1: test if a customer doesn't have enough money in their wallet to order
-        self.assertEqual(self.f1.validate_order(self.c1, self.s1, "Taco", 3), "Don't have enough money for that :( Please reload more money!")
-		# case 2: test if the stall doesn't have enough food left in stock
-        self.assertEqual(self.f2.validate_order(self.c2, self.s2, "Burger", 50), "Our stall has run out of Burger :( Please try a different stall!")
-		# case 3: check if the cashier can order item from that stall
-        self.assertEqual(self.f1.validate_order(self.c2, self.s3, "Taco", 4), self.f1.wallet == 72)
+        before_wallet = self.f1.wallet
+        self.f1.validate_order(self.c1, self.s1, "Taco", 11) 
+        self.assertEqual(before_wallet, self.f1.wallet)
+    
+        # case 2: test if the stall doesn't have enough food left in stock
+        before_inventory = self.s2.inventory["Burger"]
+        self.f2.validate_order(self.c2, self.s2, "Burger", 50)
+        self.assertEqual(before_inventory, self.s2.inventory["Burger"])
+       
+        # case 3: check if the cashier can order item from that stall
+        before_inventory_stall = self.s3.inventory["Taco"]
+        self.f1.validate_order(self.c2, self.s3, "Taco", 4)
+        self.assertEqual(before_inventory_stall - 4, self.s3.inventory["Taco"])
 
     # Test if a customer can add money to their wallet
     def test_reload_money(self):
@@ -242,13 +251,25 @@ def main():
 
     #Below you need to have *each customer instance* try the four cases
     #case 1: the cashier does not have the stall 
-    attempt1 = bob.validate_order(cashier1, fruit_stand, "banana", 7 )
+    attempt1 = bob.validate_order(cashier1, fruit_stand, "banana", 7)
+    attempt5 = sally.validate_order(cashier1, fruit_stand, "banana", 7)
+    attempt6 = frank.validate_order(cashier1, fruit_stand, "banana", 7)
+    attempt7 = george.validate_order(cashier1, fruit_stand, "banana", 7)
     #case 2: the cashier has the stall, but not enough ordered food or the ordered food item
     attempt2 = george.validate_order(cashier2, fruit_stand, "pears", 8)
+    attempt8 = frank.validate_order(cashier2, fruit_stand, "pears", 8)
+    attempt9 = sally.validate_order(cashier2, fruit_stand, "pears", 8)
+    attempt10 = bob.validate_order(cashier2, fruit_stand, "pears", 8)
     #case 3: the customer does not have enough money to pay for the order: 
     attempt3 = frank.validate_order(cashier2, sweet_shoppe, "pies", 3)
+    attempt11= george.validate_order(cashier2, sweet_shoppe, "pies", 15)
+    attempt12 = sally.validate_order(cashier2, sweet_shoppe, "pies", 20)
+    attempt13 = bob.validate_order(cashier2, sweet_shoppe, "pies", 50)
     #case 4: the customer successfully places an order
     attempt4 = sally.validate_order(cashier1, sweet_shoppe, "cakes", 2)
+    attempt14 = frank.validate_order(cashier1, sweet_shoppe, "cupcakes", 2 )
+    attempt15 = bob.validate_order(cashier2, fruit_stand, "apple", 4 )
+    attempt16 = george.validate_order(cashier2, fruit_stand, "banana", 1 )
     
 
 if __name__ == "__main__":
